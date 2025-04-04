@@ -24,7 +24,7 @@ namespace TaskManager
             string dueDate = "12/12/2025";
             string category = "work";
             
-            // Simulate user input for CreateTask
+
             SimulateInput($"{taskName}\n{priority}\n{dueDate}\n{category}\n");
 
             // Act: Run the CreateTask method
@@ -38,6 +38,6 @@ namespace TaskManager
             Assert.Equal(category.ToUpper(), task.Category);
         }
 
-        // You can create more tests to validate different edge cases for CreateTask
+        //
     }
 }

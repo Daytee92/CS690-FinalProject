@@ -1,49 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 namespace TimeManagement;
 
-class Program
+public class TaskManager
 {
-    static void Main(string[] args)
+    private List<Task> tasks;
+
+    public TaskManager()
     {
-        List<Task> tasks = new List<Task>(); // Store tasks
-
-        while (true)
-        {
-            Console.WriteLine("Welcome User!");
-            Console.WriteLine("Please choose an option:");
-            Console.WriteLine("1. Create New Task");
-            Console.WriteLine("2. Display all Tasks");
-            Console.WriteLine("3. View Productivity Report");
-            Console.WriteLine("4. Exit");
-            Console.Write("\nEnter your choice (1-4): ");
-            
-            string choice = Console.ReadLine();
-
-            switch (choice)
-            {
-                case "1":
-                    CreateTask(tasks);
-                    break;
-                case "2":
-                    ViewTasks(tasks);
-                    break;
-                case "3":
-                    ViewProductivityReport(tasks);
-                    break;
-                case "4":
-                    return;
-                default:
-                    Console.WriteLine("Invalid option. Please try again.");
-                    break;
-            }
-        }
+        tasks = new List<Task>();
     }
 
-    // Method to create a task
-    static void CreateTask(List<Task> tasks)
+    // Method to create a new task
+    public void CreateTask()
     {
-        Console.Clear();
+         Console.Clear();
         Console.WriteLine("Create New Task");
 
         Console.Write("Enter task name: ");
@@ -87,9 +60,10 @@ class Program
         Console.Clear(); // Clear screen to show task list right away
         Console.WriteLine("\nTask Created Successfully!\n");
     }
+       
 
     // Method to view all tasks
-    static void ViewTasks(List<Task> tasks)
+    public void ViewTasks()
     {
         Console.Clear();
         Console.WriteLine("All Tasks\n");
@@ -102,11 +76,10 @@ class Program
         {
             for (int i = 0; i < tasks.Count; i++)
             {
-                var task = tasks[i];
-                Console.WriteLine($"{i + 1}. Task: {task.Name} | Priority: {task.Priority} | Due Date: {task.DueDate.ToShortDateString()} | Category: {task.Category}");
+                tasks[i].DisplayTask();
             }
 
-            // Ask the user for interaction after task display
+            // Ask the user to select a task
             Console.WriteLine("\nSelect a task number to interact with or press Enter to return to the main menu.");
             string input = Console.ReadLine();
 
@@ -129,13 +102,13 @@ class Program
                 switch (actionChoice)
                 {
                     case "1":
-                        // EditTask(selectedTask); // Call the edit task logic here
+                        EditTask(selectedTask);
                         break;
                     case "2":
-                        // DeleteTask(tasks, taskNumber - 1); // Call the delete task logic here
+                        DeleteTask(selectedTask);
                         break;
                     case "3":
-                        // StartTimer(selectedTask); // Call the start timer logic here
+                        StartTimer(selectedTask);
                         break;
                     case "4":
                         break; // Return to main menu
@@ -149,53 +122,92 @@ class Program
                 Console.WriteLine("Returning to the main menu...");
             }
         }
+    }
 
-        // Automatically go back to the main menu after displaying tasks
+    // Method to edit a task
+    private void EditTask(Task task)
+    {
+        Console.Clear();
+        Console.WriteLine("Edit Task\n");
+
+        // Edit task name
+        Console.Write($"Current Task Name: {task.Name}\nEnter new name (or press Enter to keep current): ");
+        string newName = Console.ReadLine();
+        if (!string.IsNullOrEmpty(newName)) task.Name = newName;
+
+        // Edit priority
+        Console.Write($"Current Priority: {task.Priority}\nEnter new priority (High, Medium, Low): ");
+        string newPriority = Console.ReadLine().ToLower();
+        if (newPriority == "high" || newPriority == "medium" || newPriority == "low") 
+            task.Priority = newPriority.ToUpper();
+
+        // Edit due date
+        Console.Write($"Current Due Date: {task.DueDate.ToShortDateString()}\nEnter new due date (MM/dd/yyyy): ");
+        if (DateTime.TryParse(Console.ReadLine(), out DateTime newDueDate))
+            task.DueDate = newDueDate;
+
+        // Mark as complete
+        Console.Write("Mark as complete? (Y/N): ");
+        string markComplete = Console.ReadLine().ToLower();
+        if (markComplete == "y") task.IsComplete = true;
+
+        Console.WriteLine("\nTask updated successfully!");
+    }
+
+    // Method to delete a task with confirmation
+    private void DeleteTask(Task task)
+    {
+        Console.Clear();
+        Console.WriteLine($"Are you sure you want to delete the task: {task.Name}? (Y/N)");
+        string confirmation = Console.ReadLine().ToLower();
+
+        if (confirmation == "y")
+        {
+            tasks.Remove(task);
+            Console.WriteLine("Task deleted successfully.");
+        }
+        else
+        {
+            Console.WriteLine("Task not deleted.");
+        }
+    }
+
+    // Method to start a timer for a task
+    private void StartTimer(Task task)
+    {
+        Console.Clear();
+        Console.WriteLine($"Timer started for task: {task.Name}");
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+        Console.WriteLine("Press Enter to stop the timer.");
+        Console.ReadLine();  // Wait for the user to press Enter
+
+        stopwatch.Stop();
+        TimeSpan timeSpent = stopwatch.Elapsed;
+        Console.WriteLine($"Total time spent on task: {timeSpent}");
+
+        // Optionally, you can save the time spent on the task if needed
     }
 
     // Method to view productivity report
-    static void ViewProductivityReport(List<Task> tasks)
+    public void ViewProductivityReport()
     {
         Console.Clear();
         Console.WriteLine("Productivity Report\n");
 
+        int totalTasks = tasks.Count;
         int completedTasks = 0;
         int overdueTasks = 0;
+        TimeSpan totalTimeSpent = TimeSpan.Zero; // You could track this if you implement time tracking.
 
         foreach (var task in tasks)
         {
-            // For simplicity, let's assume tasks are "completed" if their due date has passed
-            if (task.DueDate < DateTime.Now)
-            {
-                overdueTasks++;
-            }
+            if (task.IsComplete) completedTasks++;
+            if (task.DueDate < DateTime.Now && !task.IsComplete) overdueTasks++;
+
+            // Optional: if you track time spent per task, you could add it up here
+            // For example: totalTimeSpent += task.TimeSpent;
         }
-
-        completedTasks = tasks.Count - overdueTasks;
-
-        // Displaying basic productivity data
-        Console.WriteLine($"Total Tasks: {tasks.Count}");
-        Console.WriteLine($"Completed Tasks: {completedTasks}");
-        Console.WriteLine($"Overdue Tasks: {overdueTasks}");
-        // In a real-world scenario, you would sum up the tracked times for each task to get the total time spent
-
-        // Automatically go back to main menu after displaying report
-    }
-}
-
-// Task class to hold task data
-public class Task
-{
-    public string Name { get; set; }
-    public string Priority { get; set; }
-    public DateTime DueDate { get; set; }
-    public string Category { get; set; }  // New property for category
-
-    public Task(string name, string priority, DateTime dueDate, string category)
-    {
-        Name = name;
-        Priority = priority;
-        DueDate = dueDate;
-        Category = category;
     }
 }
