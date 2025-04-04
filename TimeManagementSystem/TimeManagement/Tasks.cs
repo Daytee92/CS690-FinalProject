@@ -1,25 +1,27 @@
-namespace TimeManagement;
-using System;
-public class Task
+namespace TimeManagement
 {
-    public string Name { get; set; }
-    public string Priority { get; set; }
-    public DateTime DueDate { get; set; }
-    public string Category { get; set; }
-    public bool IsComplete { get; set; }  // New property to track if the task is completed
-
-    public Task(string name, string priority, DateTime dueDate, string category)
+    public class Task
     {
-        Name = name;
-        Priority = priority;
-        DueDate = dueDate;
-        Category = category;
-        IsComplete = false;
-    }
+        public string Name { get; set; }
+        public string Priority { get; set; }
+        public DateTime DueDate { get; set; }
+        public string Category { get; set; }
+        public bool IsComplete { get; set; }
 
-    // Optional: You can add a method to display task information if needed.
-    public void DisplayTask()
-    {
-        Console.WriteLine($"Task: {Name} | Priority: {Priority} | Due Date: {DueDate.ToShortDateString()} | Category: {Category} | Completed: {IsComplete}");
+        // Constructor to initialize the task
+        public Task(string name, string priority, DateTime dueDate, string category)
+        {
+            Name = name;
+            Priority = priority;
+            DueDate = dueDate;
+            Category = category;
+            IsComplete = false;
+        }
+
+        // Method to display task information
+        public void DisplayTask()
+        {
+            Console.WriteLine($"Task: {Name} | Priority: {Priority} | Due Date: {DueDate.ToShortDateString()} | Category: {Category} | Completed: {IsComplete}");
+        }
     }
 }
