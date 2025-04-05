@@ -7,9 +7,9 @@ namespace TimeManagement.Tests
     public class TaskCreatorTests
     {
         [Fact]
-        public void CreateTask_ShouldAddNewTaskToList()
+        public void TestCreateTask()
         {
-            // Arrange
+            // Add tasks
             var tasks = new List<Task>();
             var taskCreator = new TaskCreator(tasks);
             string taskName = "Test Task";
@@ -18,11 +18,11 @@ namespace TimeManagement.Tests
             string category = "Work";
             DateTime? reminder = new DateTime(2025, 12, 30, 9, 0, 0);  // Optional reminder
 
-            // Act
+    
             taskCreator.CreateTask(taskName, priority, dueDate, category, reminder);
 
             // Assert
-            Assert.Single(tasks);  // Ensure there's only one task in the list
+            Assert.Single(tasks);  // Ensures there's only one task in the list
             var task = tasks[0];
             Assert.Equal(taskName, task.Name);
             Assert.Equal(priority, task.Priority);

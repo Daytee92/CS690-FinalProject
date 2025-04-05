@@ -5,23 +5,24 @@ namespace TimeManagement
 {
     public class TaskCreator
     {
-        private List<Task> tasks; // List to store tasks
+        private List<Task> _tasks;
 
-        // Initialize the tasks list as empty
         public TaskCreator(List<Task> tasks)
         {
-            this.tasks = tasks;  // Accepts a list of tasks
+            _tasks = tasks;
         }
 
-        // Create a new task
+        // Method to create a task based on user input (no parameters)
         public void CreateTask()
         {
             Console.Clear();
             Console.WriteLine("Create New Task");
 
+            // Ask for task name
             Console.Write("Enter task name: ");
             string taskName = Console.ReadLine();
 
+            // Ask for priority
             string priority = "";
             while (true)
             {
@@ -33,6 +34,7 @@ namespace TimeManagement
                     Console.WriteLine("Invalid priority. Please enter High, Medium, or Low.");
             }
 
+            // Ask for due date
             DateTime dueDate;
             while (true)
             {
@@ -43,6 +45,7 @@ namespace TimeManagement
                     Console.WriteLine("Invalid date format. Please try again.");
             }
 
+            // Ask for category
             string category = "";
             while (true)
             {
@@ -54,7 +57,7 @@ namespace TimeManagement
                     Console.WriteLine("Invalid category. Please enter Personal or Work.");
             }
 
-            // Ask the user if they want to set a reminder
+            // Ask for reminder
             DateTime? reminder = null;
             while (true)
             {
@@ -85,11 +88,19 @@ namespace TimeManagement
                     Console.WriteLine("Invalid choice. Please enter 'yes' or 'no'.");
                 }
             }
-           
-            // Create the task and add to the list
-            tasks.Add(new Task(taskName, priority.ToUpper(), dueDate, category.ToUpper(), reminder));
 
-            Console.WriteLine("\nTask Created Successfully!\n");
+            // Create and add the task
+            var task = new Task(taskName, priority.ToUpper(), dueDate, category.ToUpper(), reminder);
+            _tasks.Add(task);
+
+            Console.WriteLine("\nTask Created Successfully!");
+        }
+
+        // For testing)
+        public void CreateTask(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null)
+        {
+            var task = new Task(name, priority, dueDate, category, reminder);
+            _tasks.Add(task);
         }
     }
 }
