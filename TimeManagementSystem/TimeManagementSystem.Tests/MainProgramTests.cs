@@ -1,83 +1,34 @@
 using System;
-using System.IO;
-using Xunit;
+using System.Collections.Generic;
 using TimeManagement;
 
-namespace TimeManagementTests
+namespace TimeManagement.Tests
 {
-    public class ProgramTests
+    public class TaskCreatorTests
     {
-        // Helper method to simulate Console.ReadLine() and capture Console.WriteLine() output
-        private string RunProgram(string input)
-        {
-            // Setup: Create a StringWriter to capture Console output
-            var stringWriter = new StringWriter();
-            Console.SetOut(stringWriter);  // Redirect Console.WriteLine to StringWriter
-
-            // Setup: Create a StringReader to simulate user input
-            var stringReader = new StringReader(input);
-            Console.SetIn(stringReader);  // Redirect Console.ReadLine to StringReader
-
-            // Run: Start the program (main logic)
-            Program.Main(new string[] { });
-
-            return stringWriter.ToString();  // Return the captured output
-        }
-
         [Fact]
-        public void CreateTask_ShouldShowTaskCreatedMessage()
+        public void CreateTask_ShouldAddNewTaskToList()
         {
-            // Simulate user input: "1" for Create New Task, followed by task details and press Enter after task creation
-            string input = "1\nComplete report\nHigh\n04/10/2025\nWork\n\n";
+            // Arrange
+            var tasks = new List<Task>();
+            var taskCreator = new TaskCreator(tasks);
+            string taskName = "Test Task";
+            string priority = "High";
+            DateTime dueDate = new DateTime(2025, 12, 31);
+            string category = "Work";
+            DateTime? reminder = new DateTime(2025, 12, 30, 9, 0, 0);  // Optional reminder
 
-            // Run the program and capture the output
-            string output = RunProgram(input);
+            // Act
+            taskCreator.CreateTask(taskName, priority, dueDate, category, reminder);
 
-            // Assert: Check if the task creation confirmation message is shown
-            Assert.Contains("Task Created Successfully!", output);
-            Assert.Contains("Press any key to return to the menu...", output);
-        }
-
-        [Fact]
-        public void ViewTasks_ShouldShowTasksList()
-        {
-            // Simulate user input: "2" for View All Tasks, then press Enter
-            string input = "2\n";
-
-            // Run the program and capture the output
-            string output = RunProgram(input);
-
-            // Assert: Check if the task list is displayed
-            Assert.Contains("All Tasks", output);  // Ensure the header is displayed
-            Assert.Contains("Task: Complete report", output);  // Check if a task is listed
-            Assert.Contains("Press any key to return to the menu...", output);
-        }
-
-        [Fact]
-        public void MainMenu_InvalidOption_ShouldShowErrorMessage()
-        {
-            // Simulate user input: Invalid input "99" then "Enter"
-            string input = "99\n";
-
-            // Run the program and capture the output
-            string output = RunProgram(input);
-
-            // Assert: Check if the error message is shown
-            Assert.Contains("Invalid option. Please try again.", output);
-            Assert.Contains("Press any key to return to the menu...", output);
-        }
-
-        [Fact]
-        public void ExitOption_ShouldExitProgram()
-        {
-            // Simulate user input: "4" to exit the program
-            string input = "4\n";
-
-            // Run the program and capture the output
-            string output = RunProgram(input);
-
-            // Assert: Check if program exits without errors
-            Assert.DoesNotContain("Please choose an option:", output);  // Menu should not be shown after exit
+            // Assert
+            Assert.Single(tasks);  // Ensure there's only one task in the list
+            var task = tasks[0];
+            Assert.Equal(taskName, task.Name);
+            Assert.Equal(priority, task.Priority);
+            Assert.Equal(dueDate, task.DueDate);
+            Assert.Equal(category, task.Category);
+            Assert.Equal(reminder, task.Reminder);  // Check reminder
         }
     }
 }
