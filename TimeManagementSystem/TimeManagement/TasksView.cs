@@ -7,13 +7,11 @@ namespace TimeManagement
     {
         private List<Task> tasks;
 
-        // Constructor to initialize the list of tasks
         public TaskViewer(List<Task> tasks)
         {
-            this.tasks = tasks;  // Accept the task list to display tasks
+            this.tasks = tasks;
         }
 
-        // Method to view all tasks
         public void ViewTasks()
         {
             Console.Clear();
@@ -25,22 +23,23 @@ namespace TimeManagement
             }
             else
             {
-                // Display all tasks
                 for (int i = 0; i < tasks.Count; i++)
                 {
-                    tasks[i].DisplayTask();  // Display each task
+                    Console.WriteLine($"{i + 1}."); 
+                    tasks[i].DisplayTask();  
+                    Console.WriteLine();  
                 }
             }
 
-            // Ask the user to select a task to interact with
-            Console.WriteLine("\nSelect a task number to interact with, or press Enter to return to the main menu.");
+            // Ask the user to select a task or press Enter to return to the main menu
+            Console.WriteLine("\nSelect a task number to interact with or press Enter to return to the main menu.");
             string input = Console.ReadLine();
 
             if (int.TryParse(input, out int taskNumber) && taskNumber >= 1 && taskNumber <= tasks.Count)
             {
-                Task selectedTask = tasks[taskNumber - 1];  // Get the selected task
+                Task selectedTask = tasks[taskNumber - 1]; 
 
-                // Display options for the selected task
+                // Present options for task interaction
                 Console.Clear();
                 Console.WriteLine($"You have selected: {selectedTask.Name}");
                 Console.WriteLine("Options:");
@@ -55,16 +54,16 @@ namespace TimeManagement
                 switch (actionChoice)
                 {
                     case "1":
-                        Console.WriteLine("Edit Task functionality is not implemented yet.");
+                        Console.WriteLine("Edit Task in production");  // Edit the selected task
                         break;
                     case "2":
-                        Console.WriteLine("Delete Task functionality is not implemented yet.");
+                        Console.WriteLine("Delete Task in production");;  // Delete the selected task
                         break;
                     case "3":
-                        Console.WriteLine("Start Task functionality is not implemented yet.");
+                        Console.WriteLine("Start Task in production");;  // Start a timer for the selected task
                         break;
                     case "4":
-                        break; // Return to main menu
+                        break;  // Return to main menu
                     default:
                         Console.WriteLine("Invalid option. Returning to task list.");
                         break;
@@ -72,7 +71,7 @@ namespace TimeManagement
             }
             else
             {
-                Console.WriteLine("Returning to the main menu...");
+                Console.WriteLine("Invalid task number. Returning to the main menu...");
             }
         }
     }

@@ -7,13 +7,13 @@ namespace TimeManagement
     {
         private List<Task> tasks; // List to store tasks
 
-        // Constructor to initialize the tasks list as empty
+        // Initialize the tasks list as empty
         public TaskCreator(List<Task> tasks)
         {
-            this.tasks = tasks;  // Accepts a list of tasks from the calling code
+            this.tasks = tasks;  // Accepts a list of tasks
         }
 
-        // Method to create a new task
+        // Create a new task
         public void CreateTask()
         {
             Console.Clear();
@@ -54,8 +54,40 @@ namespace TimeManagement
                     Console.WriteLine("Invalid category. Please enter Personal or Work.");
             }
 
+            // Ask the user if they want to set a reminder
+            DateTime? reminder = null;
+            while (true)
+            {
+                Console.Write("Do you want to set a reminder for this task? (yes/no): ");
+                string reminderChoice = Console.ReadLine().ToLower();
+                if (reminderChoice == "yes")
+                {
+                    DateTime reminderDate;
+                    while (true)
+                    {
+                        Console.Write("Enter reminder date and time (MM/dd/yyyy HH:mm): ");
+                        if (DateTime.TryParse(Console.ReadLine(), out reminderDate))
+                        {
+                            reminder = reminderDate;
+                            break;
+                        }
+                        else
+                            Console.WriteLine("Invalid date and time format. Please try again.");
+                    }
+                    break;
+                }
+                else if (reminderChoice == "no")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid choice. Please enter 'yes' or 'no'.");
+                }
+            }
+           
             // Create the task and add to the list
-            tasks.Add(new Task(taskName, priority.ToUpper(), dueDate, category.ToUpper()));
+            tasks.Add(new Task(taskName, priority.ToUpper(), dueDate, category.ToUpper(), reminder));
 
             Console.WriteLine("\nTask Created Successfully!\n");
         }
