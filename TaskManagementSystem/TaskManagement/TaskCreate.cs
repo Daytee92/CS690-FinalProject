@@ -19,9 +19,17 @@ namespace TaskManagement
             Console.WriteLine("Create New Task");
 
             // Ask for task name
-            Console.Write("Enter task name: ");
-            string taskName = Console.ReadLine();
+            string taskName = "";
+            while (string.IsNullOrWhiteSpace(taskName)){
+                Console.Write("Enter task name: ");
+                taskName = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(taskName))
+                {
+                    Console.WriteLine("Task name cannot be empty. Please enter a valid task name.");
+                }
 
+            }
+            
             // Ask for priority
             string priority = "";
             while (true)
@@ -61,9 +69,9 @@ namespace TaskManagement
             DateTime? reminder = null;
             while (true)
             {
-                Console.Write("Do you want to set a reminder for this task? (Y/N): ");
+                Console.Write("Do you want to set a reminder for this task? (yes or no): ");
                 string reminderChoice = Console.ReadLine().ToLower();
-                if (reminderChoice == "Y")
+                if (reminderChoice == "yes")
                 {
                     DateTime reminderDate;
                     while (true)
@@ -79,13 +87,13 @@ namespace TaskManagement
                     }
                     break;
                 }
-                else if (reminderChoice == "N")
+                else if (reminderChoice == "no")
                 {
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid choice. Please enter 'Y' or 'N'.");
+                    Console.WriteLine("Invalid choice. Please enter yes or no.");
                 }
             }
 
