@@ -61,9 +61,9 @@ namespace TaskManagement
             DateTime? reminder = null;
             while (true)
             {
-                Console.Write("Do you want to set a reminder for this task? (yes/no): ");
+                Console.Write("Do you want to set a reminder for this task? (Y/N): ");
                 string reminderChoice = Console.ReadLine().ToLower();
-                if (reminderChoice == "yes")
+                if (reminderChoice == "Y")
                 {
                     DateTime reminderDate;
                     while (true)
@@ -79,13 +79,13 @@ namespace TaskManagement
                     }
                     break;
                 }
-                else if (reminderChoice == "no")
+                else if (reminderChoice == "N")
                 {
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Invalid choice. Please enter 'yes' or 'no'.");
+                    Console.WriteLine("Invalid choice. Please enter 'Y' or 'N'.");
                 }
             }
 
