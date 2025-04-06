@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace TimeManagement
+namespace TaskManagement
 {
     public class TaskViewer
     {
@@ -65,13 +65,13 @@ namespace TimeManagement
                     case "4":
                         break;  // Return to main menu
                     default:
-                        Console.WriteLine("Invalid option. Returning to task list.");
+                        Console.WriteLine("Invalid Option. Returning to task list.");
                         break;
                 }
             }
             else
             {
-                Console.WriteLine("Invalid task number. Returning to the main menu...");
+                Console.WriteLine("No task selected. Returning to the main menu...");
             }
         }
     }

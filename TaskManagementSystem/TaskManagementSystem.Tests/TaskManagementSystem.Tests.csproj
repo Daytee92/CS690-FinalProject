@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TimeManagement\TimeManagement.csproj" />
+    <ProjectReference Include="..\TaskManagement\TaskManagement.csproj" />
   </ItemGroup>
 
 </Project>

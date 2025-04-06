@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using TimeManagement;
+using TaskManagement;
 
-namespace TimeManagement.Tests
+namespace TaskManagement.Tests
 {
     public class TaskCreatorTests
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Spectre.Console;
-using TimeManagement;
+using TaskManagement;
 
-namespace TimeManagement
+namespace TaskManagement
 {
     public class ConsoleUI
     {
@@ -62,14 +62,17 @@ namespace TimeManagement
                         AnsiConsole.MarkupLine("[bold red]Invalid option. Please try again.[/]");
                         break;
                 }
+                if (running) //To ensure when the user presses quit, it exits the program
+                {
+                    AnsiConsole.MarkupLine("\n[bold green]Press Enter to return to the menu...[/]");
+                    Console.ReadLine();
+                }
 
-                // Wait for user to press Enter before returning to the menu
-                AnsiConsole.MarkupLine("\n[bold green]Press Enter to return to the menu...[/]");
-                Console.ReadLine();
             }
 
             // Save tasks when the program exits
             TaskManager.SaveTasks(_tasks);  // Save tasks to the JSON file before exiting
+            Environment.Exit(0);
         }
 
         // Placeholder for Productivity Summary functionality
