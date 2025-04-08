@@ -89,14 +89,16 @@ namespace TaskManagement
             else
             {
                 // Display each task
-                foreach (var task in _tasks)
+                for (int i = 0; 1<_tasks.Count; i++)
                 {
+                    AnsiConsole.MarkupLine($"[bold blue]{1 + 1}");
                     AnsiConsole.MarkupLine($"[bold green]Task Name:[/] {task.Name}");
                     AnsiConsole.MarkupLine($"[bold yellow]Priority:[/] {task.Priority}");
                     AnsiConsole.MarkupLine($"[bold blue]Due Date:[/] {task.DueDate.ToShortDateString()}");
                     AnsiConsole.MarkupLine($"[bold red]Status:[/] {(task.IsComplete ? "Completed" : "Incomplete")}");
                     AnsiConsole.MarkupLine(new string('-', 40)); 
                 }
+                 // Display tasks with task numbers
             }
 
             // Select task
@@ -141,8 +143,6 @@ namespace TaskManagement
             string newPriority = AnsiConsole.Ask<string>($"Current Priority: {task.Priority}\nEnter new priority (High, Medium, Low): ");
             string dueDateInput = AnsiConsole.Ask<string>($"Current Due Date: {task.DueDate.ToShortDateString()}\nEnter new due date (YYYY-MM-DD): ");
             bool isComplete = AnsiConsole.Confirm("Mark as complete?");
-
-            if (!string.IsNullOrEmpty(newName)) task.Name = newName;
 
             DateTime newDueDate;
             if (!string.IsNullOrEmpty(newName) && DateTime.TryParse(dueDateInput, out newDueDate))
