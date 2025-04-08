@@ -74,6 +74,7 @@ namespace TaskManagement
             TaskManager.SaveTasks(_tasks);  // Save tasks to the JSON file before exiting
             Environment.Exit(0);
         }
+    
 
         // Placeholder for Productivity Summary functionality
         public void ViewProductivitySummary()

@@ -1,10 +1,10 @@
 [
   {
     "Name": "Join club",
-    "Priority": "LOW",
+    "Priority": "MEDIUM",
     "DueDate": "2025-04-10T00:00:00",
     "Category": "PERSONAL",
-    "IsComplete": false,
+    "IsComplete": true,
     "Reminder": null
   },
   {
