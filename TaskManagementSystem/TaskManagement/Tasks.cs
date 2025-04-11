@@ -2,46 +2,31 @@ using System.Runtime.CompilerServices;
 
 namespace TaskManagement
 {
-    public class Task
+    public class Task(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null, TimeSpan timeSpent = default)
     {
-        public string Name { get; set; }
-        public string Priority { get; set; }
-        public DateTime DueDate { get; set; }
-        public string Category { get; set; }
-        public bool IsComplete { get; set; }
-        public DateTime? Reminder { get; set; }
-        public TimeSpan TimeSpent { get; set; } = TimeSpan.Zero;
-
-        // Constructor to initialize the task
-        public Task(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null, TimeSpan timeSpent = default)
+        public string Name { get; set; } = name;
+        public string Priority { get; set; } = priority;
+        public DateTime DueDate { get; set; } = dueDate;
+        public string Category { get; set; } = category;
+        public bool IsComplete { get; set; } = false;
+        public DateTime? Reminder { get; set; } = reminder;
+        public TimeSpan TimeSpent { get; set; } = timeSpent;
+    }
+    public class Program
+    {
+        public static void Main(string[] args)
         {
-            Name = name;
-            Priority = priority;
-            DueDate = dueDate;
-            Category = category;
-            IsComplete = false;
-            Reminder = reminder;
-            TimeSpent = timeSpent;
+            // Load tasks from file immediately when the program starts
+            List<Task> tasks = TaskManager.LoadTasks();  // Load tasks from tasks.json
 
-        }
+            // Initialize task creator and viewer
+            var taskCreator = new TaskCreator(tasks);
+            var taskViewer = new TaskViewer(tasks);
+            var productivitySummary = new ProductivitySummary(tasks);
 
-        // Display task information
-        public void DisplayTask()
-        {
-            Console.WriteLine($"Task Name: {Name}");
-            Console.WriteLine($"Priority: {Priority}");
-            Console.WriteLine($"Due Date: {DueDate.ToShortDateString()}");
-
-            if (Reminder.HasValue)
-            {
-                Console.WriteLine($"Reminder: {Reminder.Value.ToShortDateString()} at {Reminder.Value.ToShortTimeString()}");
-            }
-            else
-            {
-                Console.WriteLine("Reminder: No reminder set.");
-            }
-
-            Console.WriteLine($"Completed: {(IsComplete ? "Yes" : "No")}");
+            // Initialize Console UI class and start the UI
+            var consoleUI = new ConsoleUI(tasks, taskCreator, taskViewer, productivitySummary);
+            consoleUI.Start();  // Start the interactive UI
         }
     }
 }
