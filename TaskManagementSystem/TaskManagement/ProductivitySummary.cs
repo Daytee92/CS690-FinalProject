@@ -1,19 +1,5 @@
 using System;
 using System.Collections.Generic;
-
-namespace TaskManagement
-{
-    public class ProductivitySummary
-    {
-        private List<Task> _tasks;
-
-        public ProductivitySummary(List<Task> tasks)
-        {
-            _tasks = tasks;
-        }
-
-        using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace TaskManagement
