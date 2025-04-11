@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace TaskManagement
 {
     public class Task(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null, TimeSpan timeSpent = default)
