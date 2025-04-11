@@ -49,7 +49,7 @@ namespace TaskManagement
                         TaskManager.SaveTasks(_tasks);  // Save tasks to the JSON file
                         break;
                     case "Display Tasks":
-                        DisplayTasks();   // Call DisplayTasks from ConsoleUI to view all tasks
+                        DisplayTasks();   // Call DisplayTasks to view all tasks
                         break;
                     case "View Productivity Summary":
                         ViewProductivitySummary(); // Placeholder for Productivity Summary
@@ -62,10 +62,9 @@ namespace TaskManagement
                         break;
                 }
 
-                // Only ask the user to press Enter if the program is not exiting
+                // Wait for user to press Enter before returning to the menu
                 if (running)
                 {
-                    // Wait for user to press Enter before returning to the menu
                     AnsiConsole.MarkupLine("\n[bold green]Press Enter to return to the menu...[/]");
                     Console.ReadLine();
                 }
@@ -88,96 +87,72 @@ namespace TaskManagement
             }
             else
             {
-                // Display each task
-                for (int i = 0; 1<_tasks.Count; i++)
+                // Display each task in a simple, readable list format
+                foreach (var task in _tasks)
                 {
-                    AnsiConsole.MarkupLine($"[bold blue]{1 + 1}");
                     AnsiConsole.MarkupLine($"[bold green]Task Name:[/] {task.Name}");
                     AnsiConsole.MarkupLine($"[bold yellow]Priority:[/] {task.Priority}");
                     AnsiConsole.MarkupLine($"[bold blue]Due Date:[/] {task.DueDate.ToShortDateString()}");
                     AnsiConsole.MarkupLine($"[bold red]Status:[/] {(task.IsComplete ? "Completed" : "Incomplete")}");
-                    AnsiConsole.MarkupLine(new string('-', 40)); 
+                    AnsiConsole.MarkupLine(new string('-', 40)); // Separator line for clarity
                 }
-                 // Display tasks with task numbers
             }
 
-            // Select task
-            var selectedTask = AnsiConsole.Prompt(new SelectionPrompt<Task>()
+            // Extract task names for selection
+            var taskNames = _tasks.Select(task => task.Name).ToList();
+
+            // Allow the user to scroll through and select a task by its name
+            var selectedTaskName = AnsiConsole.Prompt(new SelectionPrompt<string>()
                 .Title("Select a task to interact with")
-                .AddChoices(_tasks));
+                .AddChoices(taskNames)); // Use task names for selection
 
-            // Display task options for the selected task
-            var options = new[]
-            { "Edit Task",
-            "Delete Task",
-            "Start Task",
-            "Return to Main Menu" };
+            // Find the corresponding Task object based on selected task name
+            var selectedTask = _tasks.FirstOrDefault(t => t.Name == selectedTaskName);
 
-            var actionChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
-                .AddChoices(options)
-                .Title("Select an option"));
-
-            switch (actionChoice)
+            if (selectedTask != null)
             {
-                case "Edit Task":
-                    EditTask(selectedTask);
-                    break;
-                case "Delete Task":
-                    DeleteTask(selectedTask);
-                    break;
-                case "Start Task":
-                    StartTask(selectedTask);
-                    break;
-                case "Return to Main Menu":
-                    break;  // Return to the main menu
-                default:
-                    AnsiConsole.MarkupLine("[bold red]Invalid option. Returning to task list.[/]");
-                    break;
-            }
-        }
+                // Display task options for the selected task
+                var options = new[] { "Edit Task", "Delete Task", "Start Timer", "Return to Main Menu" };
 
-        // Edit task
-        public void EditTask(Task task)
-        {
-            string newName = AnsiConsole.Ask<string>($"Current Task Name: {task.Name}\nEnter new name (or press Enter to keep current): ");
-            string newPriority = AnsiConsole.Ask<string>($"Current Priority: {task.Priority}\nEnter new priority (High, Medium, Low): ");
-            string dueDateInput = AnsiConsole.Ask<string>($"Current Due Date: {task.DueDate.ToShortDateString()}\nEnter new due date (YYYY-MM-DD): ");
-            bool isComplete = AnsiConsole.Confirm("Mark as complete?");
+                var actionChoice = AnsiConsole.Prompt(new SelectionPrompt<string>()
+                    .AddChoices(options)
+                    .Title("Select an option"));
 
-            DateTime newDueDate;
-            if (!string.IsNullOrEmpty(newName) && DateTime.TryParse(dueDateInput, out newDueDate))
-            {
-                _taskViewer.EditTask(task, newName, newPriority, newDueDate, isComplete);
-                AnsiConsole.MarkupLine("[bold green]Task updated successfully![/]");
+                switch (actionChoice)
+                {
+                    case "Edit Task":
+                        // Delegate the edit task functionality to TaskViewer
+                        _taskViewer.EditTask(selectedTask);
+                        break;
+                    case "Delete Task":
+                        // Delegate the delete task functionality to TaskViewer
+                        _taskViewer.DeleteTask(selectedTask);
+                        break;
+                    case "Start Timer":
+                        // Delegate the start timer functionality to TaskViewer
+                        StartTimer(selectedTask);
+                        break;
+                    case "Return to Main Menu":
+                        break;  // Return to the main menu
+                    default:
+                        AnsiConsole.MarkupLine("[bold red]Invalid option. Returning to task list.[/]");
+                        break;
+                }
             }
             else
             {
-                AnsiConsole.MarkupLine("[bold red]Invalid input. Task not updated.[/]");
+                AnsiConsole.MarkupLine("[bold red]Error: Task not found.[/]");
             }
         }
 
-        // Delete task in ConsoleUI (taskViewer does the logic)
-        public void DeleteTask(Task task)
-        {
-            var confirmation = AnsiConsole.Confirm($"Are you sure you want to delete the task: {task.Name}?");
-            if (confirmation)
-            {
-                _taskViewer.DeleteTask(task);
-                AnsiConsole.MarkupLine("[bold green]Task deleted successfully.[/]");
-            }
-            else
-            {
-                AnsiConsole.MarkupLine("[bold red]Task not deleted.[/]");
-            }
-        }
-
-        // Start timer in ConsoleUI (taskViewer does the logic)
-        public void StartTask(Task task)
+        public void StartTimer(Task task)
         {
             AnsiConsole.MarkupLine($"Starting timer for task: {task.Name}");
-            TimeSpan timeSpent = _taskViewer.StartTask(task);
+            TimeSpan timeSpent = _taskViewer.StartTimer(task);
             AnsiConsole.MarkupLine($"[bold green]Total time spent on task: {timeSpent}[/]");
         }
+        
+
 
         // Placeholder for Productivity Summary functionality
         public void ViewProductivitySummary()

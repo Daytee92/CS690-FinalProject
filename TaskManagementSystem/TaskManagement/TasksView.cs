@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Formats.Asn1;
 
 namespace TaskManagement
 {
@@ -13,41 +14,119 @@ namespace TaskManagement
             _tasks = tasks;
         }
 
-        // Method to view tasks (doesn't include AnsiConsole, just task logic)
-        public List<Task> GetAllTasks()
+        // Edit a task
+        public void EditTask(Task task)
         {
-            return _tasks;
-        }
+            // Edit task name
+            Console.WriteLine("Enter new name or press Enter to keep current name: ");
+            string newName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newName)) newName = task.Name;
 
-        // Edit task logic
-        public void EditTask(Task task, string newName, string newPriority, DateTime newDueDate, bool isComplete)
-        {
-            if (!string.IsNullOrEmpty(newName))
-                task.Name = newName;
+            // Edit priority with validation
+            Console.WriteLine("Enter new priority or press eneter to keep current priority: ");
+            string newPriority = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newPriority)) newPriority = task.Priority;
 
-            if (newPriority == "high" || newPriority == "medium" || newPriority == "low")
-                task.Priority = newPriority.ToUpper();
+            // Validate priority input
 
+            if (newPriority.ToLower() != "high" && newPriority.ToLower() != "medium" && newPriority.ToLower() != "low")
+            {
+                newPriority = task.Priority;  // If input is invalid, keep current priority
+                Console.WriteLine("[bold red]Invalid priority. Keeping the current priority.[/]");
+            }
+
+            // Edit due date with validation
+            Console.WriteLine("Enter new date or press enter to keep current due date: ");
+            string dueDateInput = Console.ReadLine();
+            DateTime newDueDate = task.DueDate; // Default to current due date
+
+            if (!string.IsNullOrWhiteSpace(dueDateInput)) // Only try to parse if user enters something
+            {
+                if (DateTime.TryParse(dueDateInput, out newDueDate))
+                {
+                    // If parsing is successful, update due date
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format. Keeping the current due date.[/]");
+                }
+            }
+
+            bool markComplete = task.IsComplete;
+            string complete = "";
+            Console.WriteLine($"Current Status: {(task.IsComplete ? "Completed" : "Incomplete")}");
+            Console.WriteLine("Mark Task as complete? (Yes/No)");
+            complete = Console.ReadLine().ToLower();
+
+            if (complete == "yes")
+                task.IsComplete = true;
+            else if (complete == "no")
+                task.IsComplete = false;
+            else {
+                Console.WriteLine("Invalid choice. Exiting");
+            }
+
+            // Update task properties
+            task.Name = newName;
+            task.Priority = newPriority;
             task.DueDate = newDueDate;
-            task.IsComplete = isComplete;
+
+
+            Console.WriteLine("Task updated successfully!");
         }
 
-        // Delete task logic
+        // Delete a task
         public void DeleteTask(Task task)
         {
-            _tasks.Remove(task);
+            Console.WriteLine("Are you sure you want to delete the selected task (Yes/No)?");
+            string delete = Console.ReadLine().ToLower();
+            if (delete == "yes")
+            {
+                _tasks.Remove(task);
+                Console.WriteLine("Task Deleted Succesfully");
+            }
+            else if (delete =="no")
+            {
+                Console.WriteLine("Task Not Deleted");
+            }
+                
+            else
+            {
+                Console.WriteLine("Invalid Entry");
+            }
         }
 
-        // Start timer logic
-        public TimeSpan StartTask(Task task)
+        // Start timer for a task
+        public TimeSpan StartTimer(Task task)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            Console.WriteLine("Start Timer Now? (Yes/No)");
+            string response = Console.ReadLine().ToLower();
 
-            Console.ReadLine();  // Waiting for user to press Enter to stop the timer
+            if (response == "yes")
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
 
-            stopwatch.Stop();
-            return stopwatch.Elapsed;
+                Console.WriteLine("Press Enter to stop the timer.");
+                Console.ReadLine();  // Wait for the user to press Enter
+
+                stopwatch.Stop();
+                Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+                return stopwatch.Elapsed;
+            }
+            else if (response == "no")
+            {
+                Console.WriteLine("Timer not started.");
+                return TimeSpan.Zero;
+            }
+            else
+            {
+                Console.WriteLine("Invalid entry. Timer not started.");
+                return TimeSpan.Zero;
+            }
+
+
+
         }
-    }
+    } 
 }
