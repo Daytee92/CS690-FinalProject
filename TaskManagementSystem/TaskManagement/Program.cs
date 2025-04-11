@@ -14,9 +14,10 @@ namespace TaskManagement
             // Initialize task creator and viewer
             var taskCreator = new TaskCreator(tasks);
             var taskViewer = new TaskViewer(tasks);
+            var productivitySummary = new ProductivitySummary(tasks);
 
             // Initialize Console UI class and start the UI
-            var consoleUI = new ConsoleUI(tasks, taskCreator, taskViewer);
+            var consoleUI = new ConsoleUI(tasks, taskCreator, taskViewer, productivitySummary);
             consoleUI.Start();  // Start the interactive UI
         }
     }

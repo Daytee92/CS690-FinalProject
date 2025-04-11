@@ -10,12 +10,14 @@ namespace TaskManagement
         private List<Task> _tasks;
         private TaskCreator _taskCreator;
         private TaskViewer _taskViewer;
+        private ProductivitySummary _productivitySummary;
 
-        public ConsoleUI(List<Task> tasks, TaskCreator taskCreator, TaskViewer taskViewer)
+        public ConsoleUI(List<Task> tasks, TaskCreator taskCreator, TaskViewer taskViewer, ProductivitySummary productivitySummary)
         {
             _tasks = tasks;
             _taskCreator = taskCreator;
             _taskViewer = taskViewer;
+            _productivitySummary = productivitySummary;
         }
 
         public void Start()
@@ -53,7 +55,7 @@ namespace TaskManagement
                         _taskViewer.ViewTasks();   // Call ViewTasks to view all tasks
                         break;
                     case "View Productivity Summary":
-                        ViewProductivitySummary(); // Placeholder for Productivity Summary
+                        _productivitySummary.GenerateProductivitySummary(); // Placeholder for Productivity Summary
                         break;
                     case "Exit":
                         running = false;  // Exit the program
@@ -75,21 +77,17 @@ namespace TaskManagement
             Environment.Exit(0);
         }
 
-        // Placeholder for Productivity Summary functionality
+        // Productivity Summary functionality
         public void ViewProductivitySummary()
         {
             AnsiConsole.Clear();
-            AnsiConsole.MarkupLine("[bold yellow]Productivity Summary - Coming Soon![/]");
-
-            // For later
-            
+            AnsiConsole.MarkupLine("[bold yellow]Productivity Summary[/]");
             AnsiConsole.MarkupLine("\n[bold cyan]Tasks Summary:[/]");
             AnsiConsole.MarkupLine($"Total Tasks: {_tasks.Count}");
             int completedTasks = _tasks.Count(t => t.IsComplete);
             int incompleteTasks = _tasks.Count(t => !t.IsComplete);
             AnsiConsole.MarkupLine($"Completed Tasks: {completedTasks}");
             AnsiConsole.MarkupLine($"Incomplete Tasks: {incompleteTasks}");
-
         }
     }
 }
