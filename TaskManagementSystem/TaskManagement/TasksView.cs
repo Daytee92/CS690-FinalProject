@@ -112,6 +112,10 @@ namespace TaskManagement
 
                 stopwatch.Stop();
                 Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+
+        
+                task.TimeSpent += stopwatch.Elapsed;
+
                 return stopwatch.Elapsed;
             }
             else if (response == "no")
@@ -124,9 +128,8 @@ namespace TaskManagement
                 Console.WriteLine("Invalid entry. Timer not started.");
                 return TimeSpan.Zero;
             }
-
-
-
         }
+
+        
     } 
 }
