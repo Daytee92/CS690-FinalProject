@@ -26,7 +26,7 @@ namespace TaskManagement
             }
             else
             {
-                return new List<Task>();  // Return an empty list if no tasks file exists
+                return [];  // Return an empty list if no tasks file exists
             }
         }
     }

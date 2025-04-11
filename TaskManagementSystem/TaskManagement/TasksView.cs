@@ -1,87 +1,49 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Formats.Asn1;
 
 namespace TaskManagement
 {
-    public class TaskViewer
+    public class TaskViewer(List<Task> tasks)
     {
-        private List<Task> _tasks;
-
-        public TaskViewer(List<Task> tasks)
-        {
-            _tasks = tasks;
-        }
+        private readonly List<Task> _tasks = tasks;
 
         // Edit a task
-        public void EditTask()
+        public static void EditTask(Task task)
         {
-            if (_tasks.Count == 0)
-            {
-                Console.WriteLine("No tasks available to edit.");
-                return;
-            }
+            // Name
+            string newName = PromptHelper.PromptEdit(
+                "Enter new name or press Enter to keep current name: ",
+                task.Name
+            );
 
-            Console.WriteLine("Select a task to edit:");
-            for (int i = 0; i < _tasks.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {_tasks[i].Name}");
-            }
-            // Edit task name
-            Console.WriteLine("Enter new name or press Enter to keep current name: ");
-            string newName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(newName)) newName = _tasks.Name;
+            // Priority
+            string newPriority = PromptHelper.PromptEdit(
+                "Enter new priority (High, Medium, Low) or press Enter to keep current: ",
+                task.Priority,
+                input => input.Equals("high", StringComparison.OrdinalIgnoreCase) ||
+                         input.Equals("medium", StringComparison.OrdinalIgnoreCase) ||
+                         input.Equals("low", StringComparison.OrdinalIgnoreCase),
+                "Invalid priority. Keeping current."
+            );
 
-            // Edit priority with validation
-            Console.WriteLine("Enter new priority or press eneter to keep current priority: ");
-            string newPriority = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(newPriority)) newPriority = task.Priority;
+            // Due date
+            DateTime newDueDate = DateInputHelper.PromptOptionalDate(
+                "Enter new due date and time (MM/dd/yyyy hh:mm tt) or press Enter to keep current: ",
+                task.DueDate
+            );
 
-            // Validate priority input
-
-            if (newPriority.ToLower() != "high" && newPriority.ToLower() != "medium" && newPriority.ToLower() != "low")
-            {
-                newPriority = task.Priority;  // If input is invalid, keep current priority
-                Console.WriteLine("[bold red]Invalid priority. Keeping the current priority.[/]");
-            }
-
-            // Edit due date with validation
-            Console.WriteLine("Enter new date or press enter to keep current due date: ");
-            string dueDateInput = Console.ReadLine();
-            DateTime newDueDate = task.DueDate; // Default to current due date
-
-            if (!string.IsNullOrWhiteSpace(dueDateInput)) // Only try to parse if user enters something
-            {
-                if (DateTime.TryParse(dueDateInput, out newDueDate))
-                {
-                    // If parsing is successful, update due date
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date format. Keeping the current due date.[/]");
-                }
-            }
-
-            bool markComplete = task.IsComplete;
-            string complete = "";
+            // Completion
             Console.WriteLine($"Current Status: {(task.IsComplete ? "Completed" : "Incomplete")}");
-            Console.WriteLine("Mark Task as complete? (Yes/No)");
-            complete = Console.ReadLine().ToLower();
+            string complete = PromptHelper.PromptChoice(
+                "Mark task as complete? (Yes/No): ",
+                ["yes", "no"]);
 
-            if (complete == "yes")
-                task.IsComplete = true;
-            else if (complete == "no")
-                task.IsComplete = false;
-            else {
-                Console.WriteLine("Invalid choice. Exiting");
-            }
-
-            // Update task properties
+            // Apply changes
             task.Name = newName;
             task.Priority = newPriority;
             task.DueDate = newDueDate;
-
+            task.IsComplete = complete == "yes";
 
             Console.WriteLine("Task updated successfully!");
         }
@@ -89,58 +51,61 @@ namespace TaskManagement
         // Delete a task
         public void DeleteTask(Task task)
         {
-            Console.WriteLine("Are you sure you want to delete the selected task (Yes/No)?");
-            string delete = Console.ReadLine().ToLower();
-            if (delete == "yes")
+            string confirm = PromptHelper.PromptChoice(
+                "Are you sure you want to delete the selected task? (Yes/No): ",
+                ["yes", "no"]);
+
+            if (confirm == "yes")
             {
                 _tasks.Remove(task);
-                Console.WriteLine("Task Deleted Succesfully");
+                Console.WriteLine("Task deleted successfully.");
             }
-            else if (delete =="no")
-            {
-                Console.WriteLine("Task Not Deleted");
-            }
-                
             else
             {
-                Console.WriteLine("Invalid Entry");
+                Console.WriteLine("Task not deleted.");
             }
         }
 
         // Start timer for a task
-        public TimeSpan StartTimer(Task task)
+        public static TimeSpan StartTimer(Task task)
         {
-            Console.WriteLine("Start Timer Now? (Yes/No)");
-            string response = Console.ReadLine().ToLower();
-
-            if (response == "yes")
+            if (task.IsComplete)
             {
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-
-                Console.WriteLine("Press Enter to stop the timer.");
-                Console.ReadLine();  // Wait for the user to press Enter
-
-                stopwatch.Stop();
-                Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
-
-        
-                task.TimeSpent += stopwatch.Elapsed;
-
-                return stopwatch.Elapsed;
+                Console.WriteLine($"You already completed the task '{task.Name}'.");
+                return TimeSpan.Zero;
             }
-            else if (response == "no")
+
+            string start = PromptHelper.PromptChoice(
+                "Start task now? (Yes/No): ",
+                ["yes", "no"]);
+
+            if (start != "yes")
             {
                 Console.WriteLine("Timer not started.");
                 return TimeSpan.Zero;
             }
-            else
-            {
-                Console.WriteLine("Invalid entry. Timer not started.");
-                return TimeSpan.Zero;
-            }
-        }
 
-        
-    } 
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            Console.Write("Press Enter to stop the timer...");
+            Console.ReadLine();
+            stopwatch.Stop();
+
+            Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+            task.TimeSpent += stopwatch.Elapsed;
+
+            string done = PromptHelper.PromptChoice(
+                "Did you complete this task? (Yes/No): ",
+                ["yes", "no"]);
+
+            task.IsComplete = done == "yes";
+
+            Console.WriteLine(task.IsComplete
+                ? $"{task.Name} marked as complete."
+                : $"{task.Name} left as incomplete.");
+
+            return stopwatch.Elapsed;
+        }
+    }
 }
