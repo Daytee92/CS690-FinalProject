@@ -52,10 +52,10 @@ namespace TaskManagement
                         TaskManager.SaveTasks(_tasks);  // Save tasks to the JSON file
                         break;
                     case "Display Tasks":
-                        _taskViewer.ViewTasks();   // Call ViewTasks to view all tasks
+                        _taskViewer.EditTask();
                         break;
                     case "View Productivity Summary":
-                        _productivitySummary.GenerateProductivitySummary(); // Placeholder for Productivity Summary
+                        _productivitySummary.GenerateProductivitySummary(); //
                         break;
                     case "Exit":
                         running = false;  // Exit the program

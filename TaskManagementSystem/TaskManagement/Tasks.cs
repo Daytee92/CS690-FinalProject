@@ -8,9 +8,10 @@ namespace TaskManagement
         public string Category { get; set; }
         public bool IsComplete { get; set; }
         public DateTime? Reminder { get; set; }
+        public TimeSpan TimeSpent { get; set; } = TimeSpan.Zero;
 
         // Constructor to initialize the task
-        public Task(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null)
+        public Task(string name, string priority, DateTime dueDate, string category, DateTime? reminder = null, TimeSpan timeSpent = default)
         {
             Name = name;
             Priority = priority;
@@ -18,6 +19,7 @@ namespace TaskManagement
             Category = category;
             IsComplete = false;
             Reminder = reminder;
+            TimeSpent = timeSpent;
 
         }
 

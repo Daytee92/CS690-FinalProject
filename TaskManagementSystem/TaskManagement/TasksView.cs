@@ -1,78 +1,146 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Formats.Asn1;
 
 namespace TaskManagement
 {
     public class TaskViewer
     {
-        private List<Task> tasks;
+        private List<Task> _tasks;
 
         public TaskViewer(List<Task> tasks)
         {
-            this.tasks = tasks;
+            _tasks = tasks;
         }
 
-        public void ViewTasks()
+        // Edit a task
+        public void EditTask()
         {
-            Console.Clear();
-            Console.WriteLine("All Tasks\n");
-
-            if (tasks.Count == 0)
+            if (_tasks.Count == 0)
             {
-                Console.WriteLine("No tasks available.");
+                Console.WriteLine("No tasks available to edit.");
+                return;
             }
-            else
+
+            Console.WriteLine("Select a task to edit:");
+            for (int i = 0; i < _tasks.Count; i++)
             {
-                for (int i = 0; i < tasks.Count; i++)
+                Console.WriteLine($"{i + 1}. {_tasks[i].Name}");
+            }
+            // Edit task name
+            Console.WriteLine("Enter new name or press Enter to keep current name: ");
+            string newName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newName)) newName = _tasks.Name;
+
+            // Edit priority with validation
+            Console.WriteLine("Enter new priority or press eneter to keep current priority: ");
+            string newPriority = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newPriority)) newPriority = task.Priority;
+
+            // Validate priority input
+
+            if (newPriority.ToLower() != "high" && newPriority.ToLower() != "medium" && newPriority.ToLower() != "low")
+            {
+                newPriority = task.Priority;  // If input is invalid, keep current priority
+                Console.WriteLine("[bold red]Invalid priority. Keeping the current priority.[/]");
+            }
+
+            // Edit due date with validation
+            Console.WriteLine("Enter new date or press enter to keep current due date: ");
+            string dueDateInput = Console.ReadLine();
+            DateTime newDueDate = task.DueDate; // Default to current due date
+
+            if (!string.IsNullOrWhiteSpace(dueDateInput)) // Only try to parse if user enters something
+            {
+                if (DateTime.TryParse(dueDateInput, out newDueDate))
                 {
-                    Console.WriteLine($"{i + 1}."); 
-                    tasks[i].DisplayTask();  
-                    Console.WriteLine();  
+                    // If parsing is successful, update due date
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date format. Keeping the current due date.[/]");
                 }
             }
 
-            // Ask the user to select a task or press Enter to return to the main menu
-            Console.WriteLine("\nSelect a task number to interact with or press Enter to return to the main menu.");
-            string input = Console.ReadLine();
+            bool markComplete = task.IsComplete;
+            string complete = "";
+            Console.WriteLine($"Current Status: {(task.IsComplete ? "Completed" : "Incomplete")}");
+            Console.WriteLine("Mark Task as complete? (Yes/No)");
+            complete = Console.ReadLine().ToLower();
 
-            if (int.TryParse(input, out int taskNumber) && taskNumber >= 1 && taskNumber <= tasks.Count)
-            {
-                Task selectedTask = tasks[taskNumber - 1]; 
-
-                // Present options for task interaction
-                Console.Clear();
-                Console.WriteLine($"You have selected: {selectedTask.Name}");
-                Console.WriteLine("Options:");
-                Console.WriteLine("1. Edit Task");
-                Console.WriteLine("2. Delete Task");
-                Console.WriteLine("3. Start Task");
-                Console.WriteLine("4. Return to Main Menu");
-
-                Console.Write("\nSelect an option (1-4): ");
-                string actionChoice = Console.ReadLine();
-
-                switch (actionChoice)
-                {
-                    case "1":
-                        Console.WriteLine("Edit Task in production");  // Edit the selected task
-                        break;
-                    case "2":
-                        Console.WriteLine("Delete Task in production");;  // Delete the selected task
-                        break;
-                    case "3":
-                        Console.WriteLine("Start Task in production");;  // Start a timer for the selected task
-                        break;
-                    case "4":
-                        break;  // Return to main menu
-                    default:
-                        Console.WriteLine("Invalid Option. Returning to task list.");
-                        break;
-                }
+            if (complete == "yes")
+                task.IsComplete = true;
+            else if (complete == "no")
+                task.IsComplete = false;
+            else {
+                Console.WriteLine("Invalid choice. Exiting");
             }
+
+            // Update task properties
+            task.Name = newName;
+            task.Priority = newPriority;
+            task.DueDate = newDueDate;
+
+
+            Console.WriteLine("Task updated successfully!");
+        }
+
+        // Delete a task
+        public void DeleteTask(Task task)
+        {
+            Console.WriteLine("Are you sure you want to delete the selected task (Yes/No)?");
+            string delete = Console.ReadLine().ToLower();
+            if (delete == "yes")
+            {
+                _tasks.Remove(task);
+                Console.WriteLine("Task Deleted Succesfully");
+            }
+            else if (delete =="no")
+            {
+                Console.WriteLine("Task Not Deleted");
+            }
+                
             else
             {
-                Console.WriteLine("No task selected. Returning to the main menu...");
+                Console.WriteLine("Invalid Entry");
             }
         }
-    }
+
+        // Start timer for a task
+        public TimeSpan StartTimer(Task task)
+        {
+            Console.WriteLine("Start Timer Now? (Yes/No)");
+            string response = Console.ReadLine().ToLower();
+
+            if (response == "yes")
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                Console.WriteLine("Press Enter to stop the timer.");
+                Console.ReadLine();  // Wait for the user to press Enter
+
+                stopwatch.Stop();
+                Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+
+        
+                task.TimeSpent += stopwatch.Elapsed;
+
+                return stopwatch.Elapsed;
+            }
+            else if (response == "no")
+            {
+                Console.WriteLine("Timer not started.");
+                return TimeSpan.Zero;
+            }
+            else
+            {
+                Console.WriteLine("Invalid entry. Timer not started.");
+                return TimeSpan.Zero;
+            }
+        }
+
+        
+    } 
 }

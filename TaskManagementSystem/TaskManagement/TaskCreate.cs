@@ -48,7 +48,18 @@ namespace TaskManagement
             {
                 Console.Write("Enter task due date (MM/dd/yyyy): ");
                 if (DateTime.TryParse(Console.ReadLine(), out dueDate))
-                    break;
+                {
+                    if (dueDate.Date < DateTime.Today)
+                    {
+                        Console.WriteLine("Date cannot be in the past, please try again");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    
+                }
+                    
                 else
                     Console.WriteLine("Invalid date format. Please try again.");
             }
@@ -79,8 +90,15 @@ namespace TaskManagement
                         Console.Write("Enter reminder date and time (MM/dd/yyyy HH:mm): ");
                         if (DateTime.TryParse(Console.ReadLine(), out reminderDate))
                         {
-                            reminder = reminderDate;
-                            break;
+                            if (reminderDate.Date < DateTime.Today)
+                            {
+                                Console.WriteLine("Date cannot be in the past");
+                            }
+                            else
+                            {
+                                reminder = reminderDate;
+                                break;
+                            }
                         }
                         else
                             Console.WriteLine("Invalid date and time format. Please try again.");
