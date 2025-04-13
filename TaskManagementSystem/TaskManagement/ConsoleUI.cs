@@ -5,15 +5,17 @@ using Spectre.Console;
 
 namespace TaskManagement
 {
-    public class ConsoleUI(List<Task> tasks, TaskCreator taskCreator, TaskViewer taskViewer, ProductivitySummary productivitySummary)
+    public class ConsoleUI(List<Task> tasks, TaskCreator taskCreator, TaskViewer taskViewer, ProductivitySummary productivitySummary, ReminderService reminderService)
     {
         private readonly List<Task> _tasks = tasks;
         private readonly TaskCreator _taskCreator = taskCreator;
         private readonly TaskViewer _taskViewer = taskViewer;
         private readonly ProductivitySummary _productivitySummary = productivitySummary;
+        private readonly ReminderService _reminderService = reminderService;
 
         public void Start()
         {
+            ShowReminderPopup();
             bool running = true;
 
             var menuActions = new Dictionary<string, Action>
@@ -76,6 +78,8 @@ namespace TaskManagement
                     .AddChoices(_tasks.Select(t => t.Name)));
 
             var selectedTask = _tasks.FirstOrDefault(t => t.Name == selectedTaskName);
+
+            AnsiConsole.MarkupLine($"[bold blue]You have selected Task:[/][green] {selectedTask.Name}[/]");
 
             if (selectedTask != null)
                 HandleTaskInteraction(selectedTask);
@@ -175,6 +179,24 @@ namespace TaskManagement
                 AnsiConsole.MarkupLine("[green]Returning to Main Menu...[/]");
             else
                 AnsiConsole.MarkupLine("[yellow]You can continue viewing the summary.[/]");
+        }
+
+        private void ShowReminderPopup()
+        {
+            var reminders = _reminderService.GetDueReminders();
+
+            if (reminders.Count != 0)
+            {
+                AnsiConsole.MarkupLine("[bold red]🔔 You have task reminders![/]\n");
+
+                foreach (var task in reminders)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]- {task.Name}[/] [dim](Reminder: {task.Reminder.Value:MM/dd/yyyy hh:mm tt})[/]");
+                }
+
+                AnsiConsole.MarkupLine("\n[green]Press Enter to continue...[/]");
+                Console.ReadLine();
+            }
         }
     }
 }

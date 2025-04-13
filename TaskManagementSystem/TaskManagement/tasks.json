@@ -36,15 +36,6 @@
     "TimeSpent": "00:00:59.2682747"
   },
   {
-    "Name": "Jump",
-    "Priority": "Medium",
-    "DueDate": "2025-12-12T10:45:00",
-    "Category": "WORK",
-    "IsComplete": true,
-    "Reminder": null,
-    "TimeSpent": "00:00:00"
-  },
-  {
     "Name": "Joy",
     "Priority": "LOW",
     "DueDate": "2025-12-13T16:30:00",
@@ -63,12 +54,12 @@
     "TimeSpent": "00:00:00"
   },
   {
-    "Name": "Stay",
+    "Name": "Go to the bathroom",
     "Priority": "LOW",
-    "DueDate": "2026-12-15T01:40:00",
+    "DueDate": "2025-04-13T23:30:00",
     "Category": "WORK",
-    "IsComplete": true,
-    "Reminder": null,
+    "IsComplete": false,
+    "Reminder": "2025-04-13T23:25:00",
     "TimeSpent": "00:00:00"
   }
 ]
