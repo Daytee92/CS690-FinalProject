@@ -11,6 +11,7 @@ namespace TaskManagement
         public bool IsComplete { get; set; } = false;
         public DateTime? Reminder { get; set; } = reminder;
         public TimeSpan TimeSpent { get; set; } = timeSpent;
+        
     }
     public class Program
     {
@@ -23,9 +24,10 @@ namespace TaskManagement
             var taskCreator = new TaskCreator(tasks);
             var taskViewer = new TaskViewer(tasks);
             var productivitySummary = new ProductivitySummary(tasks);
+            var reminderService = new ReminderService(tasks);
 
             // Initialize Console UI class and start the UI
-            var consoleUI = new ConsoleUI(tasks, taskCreator, taskViewer, productivitySummary);
+            var consoleUI = new ConsoleUI(tasks, taskCreator, taskViewer, productivitySummary, reminderService);
             consoleUI.Start();  // Start the interactive UI
         }
     }
