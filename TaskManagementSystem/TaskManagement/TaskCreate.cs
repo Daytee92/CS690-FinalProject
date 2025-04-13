@@ -28,6 +28,7 @@ namespace TaskManagement
                     input.Equals("low", StringComparison.OrdinalIgnoreCase),
                 "Invalid priority. Please enter High, Medium, or Low."
             ).ToUpper();
+            
             // enter due date
             DateTime dueDate = DateInputHelper.PromptRequiredDate(
                 "Enter task due date and time (MM/dd/yyyy hh:mm tt): "
