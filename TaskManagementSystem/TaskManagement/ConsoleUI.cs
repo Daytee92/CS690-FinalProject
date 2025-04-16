@@ -168,6 +168,14 @@ namespace TaskManagement
                 AnsiConsole.MarkupLine($"[blue]{data.Key} Priority:[/] {data.Value} task(s)");
             }
 
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine("[bold blue]---- Tasks by Category ----[/]");
+
+            foreach (var data in summary.TasksByCategory)
+            {
+                AnsiConsole.MarkupLine($"[cyan]{data.Key} Category:[/] {data.Value} task(s)");
+            }
+
             AnsiConsole.MarkupLine("[bold cyan]===============================[/]");
 
             var choice = AnsiConsole.Prompt(
@@ -198,6 +206,7 @@ namespace TaskManagement
                 Console.ReadLine();
             }
         }
+        
     }
 }
 

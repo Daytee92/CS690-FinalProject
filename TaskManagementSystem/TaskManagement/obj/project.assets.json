@@ -121,19 +121,19 @@
     ]
   },
   "packageFolders": {
-    "/home/codespace/.nuget/packages/": {}
+    "/Users/taiwosuara/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/workspaces/CS690-FinalProject/TaskManagementSystem/TaskManagement/TaskManagement.csproj",
+      "projectUniqueName": "/Users/taiwosuara/Desktop/VSCode/CS690-FinalProject/TaskManagementSystem/TaskManagement/TaskManagement.csproj",
       "projectName": "TaskManagement",
-      "projectPath": "/workspaces/CS690-FinalProject/TaskManagementSystem/TaskManagement/TaskManagement.csproj",
-      "packagesPath": "/home/codespace/.nuget/packages/",
-      "outputPath": "/workspaces/CS690-FinalProject/TaskManagementSystem/TaskManagement/obj/",
+      "projectPath": "/Users/taiwosuara/Desktop/VSCode/CS690-FinalProject/TaskManagementSystem/TaskManagement/TaskManagement.csproj",
+      "packagesPath": "/Users/taiwosuara/.nuget/packages/",
+      "outputPath": "/Users/taiwosuara/Desktop/VSCode/CS690-FinalProject/TaskManagementSystem/TaskManagement/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/codespace/.nuget/NuGet/NuGet.Config"
+        "/Users/taiwosuara/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -156,7 +156,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -186,12 +187,26 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
