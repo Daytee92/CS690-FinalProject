@@ -157,7 +157,7 @@ namespace TaskManagement
             AnsiConsole.MarkupLine("[bold underline yellow]===== Productivity Summary =====[/]");
             AnsiConsole.MarkupLine($"[green]Total Tasks:[/]        {summary.TotalTasks}");
             AnsiConsole.MarkupLine($"[green]Completed Tasks:[/]    {summary.CompletedTasks}");
-            AnsiConsole.MarkupLine($"[green]Overdue Tasks:[/]      {summary.OverdueTasks}");
+            AnsiConsole.MarkupLine($"[bold red]Overdue Tasks:[/]      {summary.OverdueTasks}");
             AnsiConsole.MarkupLine($"[green]Time Tracked:[/]       {summary.TimeTracked:hh\\:mm\\:ss}");
 
             AnsiConsole.WriteLine();
@@ -169,11 +169,11 @@ namespace TaskManagement
             }
 
             AnsiConsole.WriteLine();
-            AnsiConsole.MarkupLine("[bold blue]---- Tasks by Category ----[/]");
+            AnsiConsole.MarkupLine("[bold purple_1]---- Tasks by Category ----[/]");
 
             foreach (var data in summary.TasksByCategory)
             {
-                AnsiConsole.MarkupLine($"[cyan]{data.Key} Category:[/] {data.Value} task(s)");
+                AnsiConsole.MarkupLine($"[deeppink4_1]{data.Key} Category:[/] {data.Value} task(s)");
             }
 
             AnsiConsole.MarkupLine("[bold cyan]===============================[/]");
