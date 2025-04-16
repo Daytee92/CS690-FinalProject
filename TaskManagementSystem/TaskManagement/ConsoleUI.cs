@@ -78,11 +78,11 @@ namespace TaskManagement
                     .AddChoices(_tasks.Select(t => t.Name)));
 
             var selectedTask = _tasks.FirstOrDefault(t => t.Name == selectedTaskName);
-
-            AnsiConsole.MarkupLine($"[bold blue]You have selected Task:[/][green] {selectedTask.Name}[/]");
-
             if (selectedTask != null)
+            {
+                AnsiConsole.MarkupLine($"[bold blue]You have selected Task:[/][green] {selectedTask.Name}[/]");
                 HandleTaskInteraction(selectedTask);
+            }
             else
                 AnsiConsole.MarkupLine("[bold red]Error: Task not found.[/]");
         }
